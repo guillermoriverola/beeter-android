@@ -1,5 +1,6 @@
 package edu.upc.eetac.dsa.beeter.auth;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import edu.upc.eetac.dsa.beeter.entity.Role;
 
 import java.security.Principal;
@@ -9,6 +10,7 @@ import java.util.List;
 /**
  * Created by Guillermo on 09/03/2016.
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserInfo implements Principal {
     private String name;
     private List<Role> roles = new ArrayList<>();
