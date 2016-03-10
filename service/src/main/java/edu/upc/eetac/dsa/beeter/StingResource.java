@@ -53,6 +53,22 @@ public class StingResource {
         return stingCollection;
     }
 
+    @Path("/pagination")
+    @GET
+    @Produces(BeeterMediaType.BEETER_STING_COLLECTION)
+    public StingCollection getStingstime(@QueryParam("before")long before){
+        StingCollection stingCollection = null;
+        StingDAO stingDAO = new StingDAOImpl();
+        try {
+            if(before == 0) before = System.currentTimeMillis();
+            stingCollection = stingDAO.getStingstime(before);
+        } catch (SQLException e) {
+            throw new InternalServerErrorException();
+        }
+        return stingCollection;
+    }
+
+
     @Path("/{id}")
     @GET
     @Produces(BeeterMediaType.BEETER_STING)

@@ -18,6 +18,10 @@
     "methods": ["GET"]
   },
   {
+    "path": "(?i)stings/pagination",
+    "methods": ["GET"]
+  },
+  {
     "path": "login",
     "methods": ["POST"]
   }

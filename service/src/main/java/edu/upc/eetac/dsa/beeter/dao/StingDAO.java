@@ -16,4 +16,5 @@ public interface StingDAO {
     public StingCollection getStings() throws SQLException;
     public Sting updateSting(String id, String subject, String content) throws SQLException;
     public boolean deleteSting(String id) throws SQLException;
+    public StingCollection getStingstime(long before) throws SQLException;
 }

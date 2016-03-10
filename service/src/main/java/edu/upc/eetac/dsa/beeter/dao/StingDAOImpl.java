@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import edu.upc.eetac.dsa.beeter.entity.Sting;
 import edu.upc.eetac.dsa.beeter.entity.StingCollection;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 /**
  * Created by Guillermo on 09/03/2016.
@@ -89,6 +86,43 @@ public class StingDAOImpl implements StingDAO {
         try {
             connection = Database.getConnection();
             stmt = connection.prepareStatement(StingDAOQuery.GET_STINGS);
+
+            ResultSet rs = stmt.executeQuery();
+            boolean first = true;
+            while (rs.next()) {
+                Sting sting = new Sting();
+                sting.setId(rs.getString("id"));
+                sting.setUserid(rs.getString("userid"));
+                sting.setSubject(rs.getString("subject"));
+                sting.setCreationTimestamp(rs.getTimestamp("creation_timestamp").getTime());
+                sting.setLastModified(rs.getTimestamp("last_modified").getTime());
+                if (first) {
+                    stingCollection.setNewestTimestamp(sting.getLastModified());
+                    first = false;
+                }
+                stingCollection.setOldestTimestamp(sting.getLastModified());
+                stingCollection.getStings().add(sting);
+            }
+        } catch (SQLException e) {
+            throw e;
+        } finally {
+            if (stmt != null) stmt.close();
+            if (connection != null) connection.close();
+        }
+        return stingCollection;
+    }
+
+    @Override
+    public StingCollection getStingstime(long before) throws SQLException {
+        StingCollection stingCollection = new StingCollection();
+
+        Connection connection = null;
+        PreparedStatement stmt = null;
+        try {
+            connection = Database.getConnection();
+
+            stmt = connection.prepareStatement(StingDAOQuery.GET_STINGS_TIME);
+            stmt.setTimestamp(1, new Timestamp(before));
 
             ResultSet rs = stmt.executeQuery();
             boolean first = true;
